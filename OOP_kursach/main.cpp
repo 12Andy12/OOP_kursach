@@ -1,14 +1,93 @@
 #pragma warning(disable : 4996)
+
 #include "Header.h"
-#include <iostream>
-#include <fstream>
-#include <vector>
-#include <string>
-#include <stdlib.h>
-#include <conio.h>
-#include <windows.h>
+#include "Classes.h"
 
 using namespace std;
+
+void menu(dictionary& a)
+{
+	int sign;
+	string str1, str2;
+	while (1)
+	{
+		system("cls");
+		cout << "1 - РѕС‚РєСЂС‹С‚СЊ СЃР»РѕРІР°СЂСЊ\n2 - РґРѕР±Р°РІРёС‚СЊ СЃР»РѕРІРѕ РІ СЃР»РѕРІР°СЂСЊ\n3 - СѓРґР°Р»РёС‚СЊ СЃР»РѕРІРѕ РёР· СЃР»РѕРІР°СЂСЏ\n3 - РѕС‡РёСЃС‚РёС‚СЊ СЃРѕРІР°СЂСЊ\n4 - РїРµСЂРµРІРµСЃС‚Рё СЃР»РѕРІРѕ\n";
+		sign = getch();
+		if (sign == 27)
+		{
+			a.write();
+			return;
+		}
+			
+		if (sign == 1 + '0')
+		{
+			system("cls");
+			int L = 0;
+			a.print(L, L + 10);
+			cout << "СЃС‚СЂР°РЅРёС†Р°" << (L + 10) / 10 << "\n";
+			while (1)
+			{
+				sign = getch();
+				if (sign == 27)
+					break;
+				if (sign == 75 && L != 0)
+				{
+					system("cls");
+					L -= 10;
+					a.print(L, L + 10);
+					cout << "СЃС‚СЂР°РЅРёС†Р°" << (L + 10) / 10 << "\n";
+				}
+				else if (sign == 77)
+				{
+					system("cls");
+					L += 10;
+					a.print(L, L + 10);
+					cout << "СЃС‚СЂР°РЅРёС†Р°" << (L + 10) / 10 << "\n";
+				}
+			}
+		}
+		if (sign == 2 + '0')
+		{
+			system("cls");
+			cout << "En: ";
+			getline(cin, str1);
+			cout << "Rus: ";
+			getline(cin, str2);
+			cout << "РґР»СЏ РѕС‚РјРµРЅС‹ - esc\n";
+			sign = getch();
+			if (sign != 27)
+			{
+				word newword(str1, str2);
+				a.addWord(newword);
+			}
+			system("cls");
+		}
+		if (sign == 3 + '0')
+		{
+			system("cls");
+			cout << "РЈ СЃР°РјСѓСЂР°СЏ РЅРµС‚ С†РµР»Рё, РµСЃС‚СЊ С‚РѕР»СЊРєРѕ РїСѓС‚СЊ";
+			a.clear();
+			sign = getch();
+		}
+		if (sign == 4 + '0')
+		{
+			while (1)
+			{
+				system("cls");
+				cout << "РЎР»РѕРІРѕ: \nEn: ";
+				getline(cin, str1);
+				cout << str1 << "\n";
+				a.translate(str1);
+				cout << "\nР’РµСЂРЅСѓС‚СЃСЏ РІ РјРµРЅСЋ - esc\n";
+				sign = getch();
+				if (sign == 27)
+					break;
+			}
+			
+		}
+	}
+}
 
 int main()
 {
@@ -17,71 +96,10 @@ int main()
 	system("cls");
 	setlocale(0, "");
 	DB_employee a;
-	string str,str1,str2;
-	while (1)
-	{
-		cout << "Введите слово или команду\n";
-		getline(cin, str);
-		if (str == "/end")
-			break;
-		else if (str == "/help")
-			cout << "\n/end - завершение работы\n/add - добавляет слово в словарь\n/clear - затирает словарь (у самурая нет цели, есть только путь)\n/open - открыть словарь (выход из словаря - срелочка вниз, страницы листать на стрелочки вправо/влево)\n\n";
-		else if (str == "/add")
-		{
-			cout << "En: ";
-			getline(cin, str1);
-			cout << "Rus: ";
-			getline(cin, str2);
-			word newword(str1, str2);
-			a.addWord(newword);
-			system("cls");
-		}
-		else if (str == "/clear")
-			a.clear();
-		else if (str == "/open")
-		{
-			int sign, L=0;
-			a.print(L, L + 20);
-			cout << "страница" << (L + 20) / 20 << "\n";
-			while (1)
-			{
-				sign = getch();
-
-				if (sign == 80)
-					break;
-				if (sign == 75 &&  L!= 0)
-				{
-					system("cls");
-					L -= 20;
-					a.print(L, L+20);
-					cout << "страница" << (L + 10) / 10 << "\n";
-				}
-				else if (sign == 77)
-				{
-					system("cls");
-					L += 20;
-					a.print(L, L+20);
-					cout << "страница" << (L+10) / 10<<"\n";
-				}
-			}
-			system("cls");
-		}
-		else if (str=="/delete")
-		{
-			cout << "Удаляем слово: \nEn: ";
-			getline(cin, str1);
-			cout << "Rus: ";
-			getline(cin, str2);
-			word oldword(str1, str2);
-			a.del(oldword);
-		}
-		else
-		{
-			system("cls");
-			cout << str << "\n";
-			a.translate(str);
-			cout << "\n";
-		}
-	}
-	a.write();
+	menu(a);
+	int sign = getch();
+	if (sign == 9 + '0')
+		cout<<"\n" << a.H();
+	if (sign == '0')
+		a.print_tree();
 }
